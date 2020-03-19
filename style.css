@@ -2,3 +2,27 @@ body {
 	color: black;
 	background-color: white;
 }
+
+#grid {
+	display: grid;
+	grid-gap: 5px;
+	width: 350px;
+	height: 300px;
+}
+
+#grid div {
+	border-radius: 50%;
+}
+
+#grid div.first {
+	background: orange;
+}
+
+#grid div.second {
+	background: blue;
+}
+
+#grid div.possible {
+	background: lightgray;
+	cursor: pointer;
+}
