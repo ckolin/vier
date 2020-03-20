@@ -5,15 +5,18 @@ const width = 7, height = 6;
 
 const encode = (moves) => {
 	let res = "";
+	if (moves.length % 2 !== 0)
+		moves.push(7);
 	for (let i = 0; i < moves.length; i += 2)
-		res += alphabet[parseInt(`${moves[i]}${moves[i + 1] || 7}`, 8)];
+		res += alphabet[parseInt(`${moves[i]}${moves[i + 1]}`, 8)];
 	return res;
 };
 
 const decode = (string) => {
 	const res = [];
-	for (let c of hash)
-		for (let i of alphabet.indexOf(c).toString(8).split(""))
+	const digits = (n) => n < 10 ? ["0", n] : n.split("");
+	for (let c of string)
+		for (let i of digits(alphabet.indexOf(c).toString(8)))
 			res.push(+i);
 	while (res[res.length - 1] === 7)
 		res.pop();
