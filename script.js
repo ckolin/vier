@@ -63,14 +63,13 @@ const place = (i) => {
 	// TODO: Check for win
 	
 	if (navigator.share) {
-		navigator.share(
-			{title: "vier",
+		navigator.share({
+			title: "vier",
 			text: "your turn",
-			url: location.href}
-		).then(() => location.reload());
-	} else {
-		location.reload();
+			url: location.href
+		});
 	}
+	location.reload();
 };
 
 // This is where all the magic happens
