@@ -23,46 +23,58 @@ const decode = (string) => {
 	return res;
 };
 
-const getId = (x, y) => `cell-${x}-${y}`;
-const getCell = (x, y) => document.getElementById(getId(x, y));
-
-const init = () => {
-	let columns = "";
-	for (let i = 0; i < width; i++)
-		columns += "1fr ";
-	grid.style.gridTemplateColumns = columns;
-	for (let y = height - 1; y >= 0; y--) {
-		for (let x = 0; x < width; x++) {
-			const el = document.createElement("div");
-			el.id = getId(x, y);
-			grid.appendChild(el);
-		}
-	}
-};
-
-const draw = () => {
+const read = (moves) => {
+	const res = [];
+	for (let y = 0; y < height; y++)
+		res.push([]);
 	const placed = [];
 	for (let i = 0; i < width; i++)
-		placed[i] = 0;
-
+		placed.push(0);
 	let first = true;
 	for (let m of moves) {
-		getCell(m, placed[m]).className = first ? "first" : "second";
+		res[placed[m]][m] = first ? "first" : "second";
 		placed[m]++;
 		first = !first;
 	}
+	for (let i = 0; i < width; i++)
+		if (placed[i] < height)
+			res[placed[i]][i] = "possible";
+	return res;
+};
 
-	for (let i = 0; i < width; i++) {
-		const c = getCell(i, placed[i]);
-		if (c != null) {
-			c.className = "possible";
-			c.onclick = () => { moves.push(i); draw(); };
+const draw = (state) => {
+	for (let y = height - 1; y >= 0; y--) {
+		for (let x = 0; x < width; x++) {
+			const cell = document.createElement("div");
+			const value = state[y][x];
+			if (value != null)
+				cell.classList.add(value);
+			if (value === "possible")
+				cell.onclick = () => place(x);
+			grid.appendChild(cell);
 		}
 	}
 };
 
+const place = (i) => {
+	moves.push(i);
+	location.hash = encode(moves);
+
+	// TODO: Check for win
+	
+	if (navigator.share) {
+		navigator.share(
+			{title: "vier",
+			text: "your turn",
+			url: location.href}
+		).then(() => location.reload());
+	} else {
+		location.reload();
+	}
+};
+
+// This is where all the magic happens
 const hash = location.hash.substring(1);
 const moves = decode(hash);
-
-init();
-draw();
+const state = read(moves);
+draw(state);
