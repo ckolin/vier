@@ -64,8 +64,7 @@ const place = (i) => {
 	
 	if (navigator.share) {
 		navigator.share({
-			title: "vier",
-			text: "your turn",
+			title: "your turn",
 			url: location.href
 		});
 	}
